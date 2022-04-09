@@ -5,13 +5,13 @@ use std::{
 };
 use tracing::{
   info,
-  debug,
   //error,
 };
 use zbus::{export::futures_util::StreamExt, Address, Connection, ConnectionBuilder, dbus_proxy, Result};
-use a11y;
+
+
 #[tokio::main]
-async fn main() -> Result<(), Box<Std::error::error> {
+async fn main() -> Result<()> {
     logging::init();
     let _args = args::parse();
     let connection = Connection::session().await?;
@@ -81,7 +81,7 @@ trait Status {
     #[dbus_proxy(property)]
     fn screen_reader_enabled(&self) -> zbus::Result<bool>;
     #[dbus_proxy(property)]
-    fn set_screen_reader_enabled(value: bool, &self) -> zbus::Result<()>;
+    fn set_screen_reader_enabled(&self, value: bool) -> zbus::Result<()>;
 }
 
 #[dbus_proxy(
