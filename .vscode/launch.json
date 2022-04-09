@@ -1,0 +1,115 @@
+[
+    {
+    "type": "lldb",
+        "request": "launch",
+        "name": "Debug executable 'odilia'",
+        "cargo": {
+            "args": [
+                "build",
+                "--bin=odilia",
+                "--package=odilia"
+            ],
+            "filter": {
+                "name": "odilia",
+                "kind": "bin"
+            }
+        },
+        "args": [],
+        "cwd": "${workspaceFolder}"
+    },
+    {
+        "type": "lldb",
+        "request": "launch",
+        "name": "Debug unit tests in executable 'odilia'",
+        "cargo": {
+            "args": [
+                "test",
+                "--no-run",
+                "--bin=odilia",
+                "--package=odilia"
+            ],
+            "filter": {
+                "name": "odilia",
+                "kind": "bin"
+            }
+        },
+        "args": [],
+        "cwd": "${workspaceFolder}"
+    },
+    {
+        "type": "lldb",
+        "request": "launch",
+        "name": "Debug unit tests in library 'atspi'",
+        "cargo": {
+            "args": [
+                "test",
+                "--no-run",
+                "--lib",
+                "--package=atspi"
+            ],
+            "filter": {
+                "name": "atspi",
+                "kind": "lib"
+            }
+        },
+        "args": [],
+        "cwd": "${workspaceFolder}"
+    },
+    {
+        "type": "lldb",
+        "request": "launch",
+        "name": "Debug unit tests in library 'odilia-common'",
+        "cargo": {
+            "args": [
+                "test",
+                "--no-run",
+                "--lib",
+                "--package=odilia-common"
+            ],
+            "filter": {
+                "name": "odilia-common",
+                "kind": "lib"
+            }
+        },
+        "args": [],
+        "cwd": "${workspaceFolder}"
+    },
+    {
+        "type": "lldb",
+        "request": "launch",
+        "name": "Debug unit tests in library 'odilia-input'",
+        "cargo": {
+            "args": [
+                "test",
+                "--no-run",
+                "--lib",
+                "--package=odilia-input"
+            ],
+            "filter": {
+                "name": "odilia-input",
+                "kind": "lib"
+            }
+        },
+        "args": [],
+        "cwd": "${workspaceFolder}"
+    },
+    {
+        "type": "lldb",
+        "request": "launch",
+        "name": "Debug unit tests in library 'odilia-tts'",
+        "cargo": {
+            "args": [
+                "test",
+                "--no-run",
+                "--lib",
+                "--package=odilia-tts"
+            ],
+            "filter": {
+                "name": "odilia-tts",
+                "kind": "lib"
+            }
+        },
+        "args": [],
+        "cwd": "${workspaceFolder}"
+    }
+]
