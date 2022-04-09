@@ -39,7 +39,7 @@ async fn main() -> Result<()> {
     for (e1,e2) in events {
       tracing::info!("Event {},{} is registered", e1, e2);
     }
-    let mut stream = rproxy.receive_all_signals().await?;
+    let mut stream = bproxy.receive_all_signals().await?;
     while let Some(_e) = stream.next().await {
       println!("EVENT!");
       tracing::info!("\tEvent received!");
