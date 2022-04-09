@@ -3,17 +3,15 @@ mod logging;
 use std::{
   str::FromStr,
 };
-use zbus::{
-  Address,
-  Connection,
-  ConnectionBuilder,
-  dbus_proxy,
-  Result
+use tracing::{
+  info,
+  debug,
+  //error,
 };
-use zbus::export::futures_util::StreamExt;
-
+use zbus::{export::futures_util::StreamExt, Address, Connection, ConnectionBuilder, dbus_proxy, Result};
+use a11y;
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() -> Result<(), Box<Std::error::error> {
     logging::init();
     let _args = args::parse();
     let connection = Connection::session().await?;
@@ -27,17 +25,17 @@ async fn main() -> Result<()> {
     let screen_reader_enabled = sproxy.screen_reader_enabled().await?;
     sproxy.set_screen_reader_enabled(true).await?;
     sproxy.set_is_enabled(true).await?;
-    sproxy.set_screen_reader_enabled(false).await?;
-    tracing::info!("Hello, world!");
-    tracing::info!("Found the a11y bus {}!", addr);
-    tracing::info!("Screen ready is active? {}", screen_reader_enabled);
+    //sproxy.set_screen_reader_enabled(false).await?;
+    info!("Hello, world!");
+    info!("Found the a11y bus {}!", addr);
+    info!("Screen ready is active? {}", screen_reader_enabled);
     rproxy.register_event("object:state-changed:focused").await?;
     rproxy.register_event("object:text-caret-moved").await?;
-    rproxy.register_event("object:text-caret-movedd").await?;
+    //rproxy.register_event("object:text-caret-movedd").await?;
     let events = rproxy.get_registered_events().await?;
-    tracing::info!("Events registerd: {}", events.len());
-    for (e1,e2) in events {
-      tracing::info!("Event {},{} is registered", e1, e2);
+    tracing::debug!("Events registerd: {}", events.len());
+    for (e1, e2) in events {
+      tracing::debug!("Event {},{} is registered", e1, e2);
     }
     let mut stream = bproxy.receive_all_signals().await?;
     while let Some(_e) = stream.next().await {
@@ -83,7 +81,7 @@ trait Status {
     #[dbus_proxy(property)]
     fn screen_reader_enabled(&self) -> zbus::Result<bool>;
     #[dbus_proxy(property)]
-    fn set_screen_reader_enabled(&self, value: bool) -> zbus::Result<()>;
+    fn set_screen_reader_enabled(value: bool, &self) -> zbus::Result<()>;
 }
 
 #[dbus_proxy(
