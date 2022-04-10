@@ -57,5 +57,6 @@ odilia-tts = { path = "tts" }
 tokio = { version = "1.16.1", features = ["full", "parking_lot"] }
 tracing = { version = "0.1.30" }
 tracing-subscriber = { version = "0.3.8", features = ["parking_lot"] }
+color-eyre = "0.6.1"
 
 [features]
