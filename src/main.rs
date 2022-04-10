@@ -14,7 +14,7 @@ use tracing::{
     info,
 };
 use zbus::{
-    dbus_proxy, export::futures_util::StreamExt, Address, Connection, ConnectionBuilder,
+    export::futures_util::StreamExt, Address, Connection, ConnectionBuilder,
     };
 #[tokio::main]
 async fn main() -> Result<()> {
