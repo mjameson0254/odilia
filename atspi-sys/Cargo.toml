@@ -1,8 +1,8 @@
 [package]
-name = "atspi"
+name = "atspi-sys"
 version = "0.0.1"
 authors = ["Michael Connor Buchan <mikey@blindcomputing.org>", "Tait Hoyem <tait@tait.tech>", "Alberto Tirla <albertotirla@gmail.com>"]
-description = "Bindings to the Assistive Technology Service Provider Interface over dbus"
+description = "Raw bindings to the Assistive Technology Service Provider Interface over dbus"
 license = "gpl-3" # Not gpl-3-or-later
 readme = "README.md"
 repository = "https://github.com/odilia-app/odilia"

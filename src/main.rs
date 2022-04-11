@@ -2,7 +2,7 @@ mod a11y;
 mod args;
 mod logging;
 use a11y::{BusProxy, StatusProxy};
-use atspi::registry::RegistryProxy;
+use atspi_sys::registry::RegistryProxy;
 use color_eyre::eyre::{Result, WrapErr};
 
 use std::str::FromStr;

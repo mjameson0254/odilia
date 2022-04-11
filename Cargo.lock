@@ -128,7 +128,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "atspi"
+name = "atspi-sys"
 version = "0.0.1"
 dependencies = [
  "zbus",
@@ -576,7 +576,7 @@ dependencies = [
 name = "odilia"
 version = "0.0.1"
 dependencies = [
- "atspi",
+ "atspi-sys",
  "clap",
  "color-eyre",
  "odilia-common",
