@@ -69,7 +69,7 @@ async fn main() -> Result<()> {
         .wrap_err("error while processing dbus sygnals")?;
     Ok(())
 }
-
+#[tracing::instrument(skip(rproxy))]
 async fn process_events(rproxy: RegistryProxy<'_>) -> Result<(), zbus::Error> {
     let events = rproxy.get_registered_events().await?;
     tracing::debug!("Events registerd: {}", events.len());
@@ -78,7 +78,7 @@ async fn process_events(rproxy: RegistryProxy<'_>) -> Result<(), zbus::Error> {
     }
     Ok(())
 }
-
+#[tracing::instrument(skip(proxy))]
 async fn process_signals(proxy: BusProxy<'_>) -> Result<()> {
     let mut stream = proxy.receive_all_signals().await?;
     while let Some(_e) = stream.next().await {
