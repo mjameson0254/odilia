@@ -12,3 +12,4 @@ edition = "2021"
 publish = false
 
 [dependencies]
+ssip-client = "0.7.0"
