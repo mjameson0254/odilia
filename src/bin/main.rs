@@ -1,10 +1,9 @@
-use std::sync::Arc;
-
 use color_eyre::eyre::Result;
 use odilia::*;
+use std::sync::Arc;
 #[tokio::main]
 async fn main() -> Result<()> {
-    setup();
+    setup().await;
     let (rproxy, bproxy) = init_accessibility().await?;
     let rproxy = Arc::new(rproxy);
     let bproxy = Arc::new(bproxy);

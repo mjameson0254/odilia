@@ -13,8 +13,6 @@ pub fn init() {
     std::env::set_var("RUST_LOG", "debug");
     Registry::default()
         .with(EnvFilter::from_default_env())
-        .with( tracing_tree_layer::init_layer())
-            
+        .with(tracing_tree_layer::init_layer())
         .init();
 }
-

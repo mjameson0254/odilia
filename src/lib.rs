@@ -1,9 +1,10 @@
 mod a11y;
 mod args;
-use logging;
+
 use a11y::{BusProxy, StatusProxy};
 use atspi_sys::registry::RegistryProxy;
 use color_eyre::eyre::{Result, WrapErr};
+use logging;
 
 use std::{process::exit, str::FromStr, sync::Arc};
 use tracing::{
@@ -13,11 +14,28 @@ use tracing::{
 };
 use zbus::{export::futures_util::StreamExt, Address, Connection, ConnectionBuilder};
 #[tracing::instrument]
-pub fn setup() {
+pub async fn setup() {
     logging::init();
     info!("odilia screenreader successfully started!");
     color_eyre::install().unwrap();
     let _args = args::parse();
+    //for some reason, this doesn't work, the executor keeps blocking on that future and it only returns back to the caller when an actual sigint is recieved, even though I used the task API to hopefully start the signal listener loop in paralell. Committing this knowing full well I'll have to come back to it later, but most of the pieces are there
+    //register_keyboard_interrupt().await;
+}
+#[tracing::instrument]
+async fn register_keyboard_interrupt() {
+    debug!("registering sigint handler");
+    use tokio::signal;
+
+    tokio::task::spawn(async {
+        signal::ctrl_c()
+            .await
+            .expect("unable to register sigint handler");
+    })
+    .await
+    .expect("something went wrong while executing the future");
+    debug!("sigint handler successfully registered");
+    cleanup();
 }
 #[tracing::instrument]
 pub fn cleanup() {
@@ -74,7 +92,10 @@ pub async fn register_events(rproxy: Arc<RegistryProxy<'_>>) -> Result<()> {
     rproxy.register_event("object:text-caret-moved").await?;
     Ok(())
 }
-pub async fn spawn_event_tasks(rproxy: Arc<RegistryProxy<'static>>, bproxy: Arc<BusProxy<'static>>) -> Result<()> {
+pub async fn spawn_event_tasks(
+    rproxy: Arc<RegistryProxy<'static>>,
+    bproxy: Arc<BusProxy<'static>>,
+) -> Result<()> {
     tokio::task::spawn(process_events(Arc::clone(&rproxy)))
         .await?
         .wrap_err("error while processing accessibility events")?;
