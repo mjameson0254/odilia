@@ -1,27 +1,27 @@
 [package]
-name = "odilia"
-version = "0.0.1"
-authors = ["Michael Connor Buchan <mikey@blindcomputing.org>", "Tait Hoyem <tait@tait.tech>", "Alberto Tirla <albertotirla@gmail.com>"]
-description = "Building a better screen reader for the Linux desktop, one step at a time."
+authors = ["Michael Connor Buchan <mikey@blindcomputing.org>", "Tait Hoyem <tait@tait.tech>", "Alberto Tirla <albertotirla@gmail.com>"] 
+categories = ["accessibility"] 
+description = "Building a better screen reader for the Linux desktop, one step at a time." 
+edition = "2021" 
+homepage = "https://odilia.app" 
+keywords = ["screen-reader", "accessibility", "a11y", "tts", "linux"] 
 license = "gpl-3" # Not gpl-3-or-later
-readme = "README.md"
-repository = "https://github.com/odilia-app/odilia"
-homepage = "https://odilia.app"
-keywords = ["screen-reader", "accessibility", "a11y", "tts", "linux"]
-categories = ["accessibility"]
-edition = "2021"
-publish = false
+name = "odilia" 
+publish = false 
+readme = "README.md" 
+repository = "https://github.com/odilia-app/odilia" 
+version = "0.0.1" 
 
 [package.metadata.release]
 # The root crate should be released
 release = true
 # Update the CHANGELOG
 pre-release-replacements = [
-  {file="CHANGELOG.md", search="Unreleased", replace="{{version}}"},
-  {file="CHANGELOG.md", search="\\.\\.\\.HEAD", replace="...{{tag_name}}", exactly=1},
-  {file="CHANGELOG.md", search="ReleaseDate", replace="{{date}}"},
-  {file="CHANGELOG.md", search="<!-- next-header -->", replace="<!-- next-header -->\n\n## [Unreleased] - ReleaseDate", exactly=1},
-  {file="CHANGELOG.md", search="<!-- next-url -->", replace="<!-- next-url -->\n[Unreleased]: https://github.com/odilia-app/odilia/compare/{{tag_name}}...HEAD", exactly=1},
+  {file = "CHANGELOG.md", search = "Unreleased", replace = "{{version}}"},
+  {file = "CHANGELOG.md", search = "\\.\\.\\.HEAD", replace = "...{{tag_name}}", exactly = 1},
+  {file = "CHANGELOG.md", search = "ReleaseDate", replace = "{{date}}"},
+  {file = "CHANGELOG.md", search = "<!-- next-header -->", replace = "<!-- next-header -->\n\n## [Unreleased] - ReleaseDate", exactly = 1},
+  {file = "CHANGELOG.md", search = "<!-- next-url -->", replace = "<!-- next-url -->\n[Unreleased]: https://github.com/odilia-app/odilia/compare/{{tag_name}}...HEAD", exactly = 1},
 ]
 
 # Note: we don't need to specify any members here because they're all path dependencies of the main crate
@@ -29,35 +29,34 @@ pre-release-replacements = [
 
 [profile.release]
 lto = "thin"
-opt-level="z"
+opt-level = "z"
 [workspace.metadata.release]
 allow-branch = ["main"]
 # By default, crates will not be released or published
 # These are overridden on a crate-by-crate basis
-release = false
-publish = false
-shared-version = true
 consolidate-commits = true
 consolidate-pushes = true
-pre-release-commit-message = "Release Odilia version {{version}}"
-post-release-commit-message = "Post release version bump: version {{next_version}}"
-tag-message = "{{crate_name}} version {{version}}"
-dev-version-ext = "dev"
-dev-version = true
-pre-release-hook = ["cargo", "fmt"]
 dependent-version = "upgrade"
+dev-version = true
+dev-version-ext = "dev"
+post-release-commit-message = "Post release version bump: version {{next_version}}"
+pre-release-commit-message = "Release Odilia version {{version}}"
+pre-release-hook = ["cargo", "fmt"]
+publish = false
+release = false
+shared-version = true
+tag-message = "{{crate_name}} version {{version}}"
 
 [dependencies]
-zbus = { version = "^2.1.1", default-features = false, features = ["tokio"] }
-atspi-sys = { path = "atspi-sys", default-features = false, features = ["tokio"] }
-clap = { version = "3.0.14", features = ["derive", "wrap_help"] }
-odilia-common = { path = "common" }
-odilia-input = { path = "input" }
-odilia-tts = { path = "tts" }
-tokio = { version = "1.16.1", features = ["full", "parking_lot"] }
-tracing = { version = "0.1.30" }
-tracing-subscriber = { version = "0.3.8", features = ["parking_lot", "env-filter"] }
+atspi-sys = {path = "atspi-sys", default-features = false, features = ["tokio"]}
+clap = {version = "3.0.14", features = ["derive", "wrap_help"]}
 color-eyre = "0.6.1"
-tracing-tree = "0.2.0"
+logging = {path = "logging"}
+odilia-common = {path = "common"}
+odilia-input = {path = "input"}
+odilia-tts = {path = "tts"}
+tokio = {version = "1.16.1", features = ["full", "parking_lot"]}
+tracing = "0.1.33"
+zbus = {version = "^2.1.1", default-features = false, features = ["tokio"]}
 
 [features]
