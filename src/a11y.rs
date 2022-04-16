@@ -21,9 +21,9 @@
 use zbus::dbus_proxy;
 
 #[dbus_proxy(
-  interface = "org.a11y.Status",
-  default_service = "org.a11y.Bus",
-  default_path = "/org/a11y/bus"
+    interface = "org.a11y.Status",
+    default_service = "org.a11y.Bus",
+    default_path = "/org/a11y/bus"
 )]
 trait Status {
     /// IsEnabled property
@@ -39,10 +39,7 @@ trait Status {
     fn set_screen_reader_enabled(&self, value: bool) -> zbus::Result<()>;
 }
 
-#[dbus_proxy(
-  interface = "org.a11y.Bus",
-  default_path = "/org/a11y/bus"
-)]
+#[dbus_proxy(interface = "org.a11y.Bus", default_path = "/org/a11y/bus")]
 trait Bus {
     /// GetAddress method
     fn get_address(&self) -> zbus::Result<String>;
