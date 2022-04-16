@@ -12,11 +12,11 @@
 
 use zbus::dbus_proxy;
 
+//default_service = "org.a11y.atspi.Registry"
 #[dbus_proxy(
   interface = "org.a11y.atspi.Event.Object",
-  default_service = "org.a11y.atspi.Registry"
 )]
-trait Object {
+trait EventObject {
     /// ActiveDescendantChanged signal
     #[dbus_proxy(signal)]
     fn active_descendant_changed(
@@ -149,7 +149,6 @@ trait Object {
 }
 
 /*
-
 #[dbus_proxy(interface = "org.a11y.atspi.Event.Window")]
 trait Window {
     /// Activate signal

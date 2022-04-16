@@ -2,7 +2,10 @@ mod a11y;
 mod args;
 
 use a11y::{BusProxy, StatusProxy};
-use atspi_sys::registry::RegistryProxy;
+use atspi_sys::{
+    registry::RegistryProxy,
+    event::EventObjectProxy,
+};
 use color_eyre::eyre::{Result, WrapErr};
 use logging;
 
@@ -12,7 +15,13 @@ use tracing::{
     //error,
     info,
 };
-use zbus::{export::futures_util::StreamExt, Address, Connection, ConnectionBuilder};
+use zbus::{
+    export::futures_util::StreamExt,
+    Address,
+    Connection,
+    ConnectionBuilder,
+};
+
 #[tracing::instrument]
 pub async fn setup() {
     logging::init();
@@ -42,10 +51,13 @@ pub fn cleanup() {
     info!("odilia screenreader is shutting down");
     exit(0);
 }
-pub async fn init_accessibility<'a>() -> Result<(RegistryProxy<'a>, BusProxy<'a>)> {
+pub async fn init_accessibility<'a>() -> Result<(RegistryProxy<'a>, BusProxy<'a>, EventObjectProxy<'a>)> {
     let connection = Connection::session()
         .await
         .wrap_err("unable to connect to dbus session")?;
+    let dbproxy = DBusProxy::new(&connection).await.wrap_err("error connecting to DBus proxy")?;
+    let ans = dbproxy.add_match("type='signal',interface='org.a11y.atspi.Event.Object',member='TextCaretMoved',path='/org/a11y/atspi/registry'").await?;
+    debug!("{:?}", ans);
     let bproxy = BusProxy::new(&connection).await.wrap_err(
         "error while creating a proxy to the session buss entrypoint to the atspi registrid",
     )?;
@@ -61,6 +73,9 @@ pub async fn init_accessibility<'a>() -> Result<(RegistryProxy<'a>, BusProxy<'a>
         .build()
         .await
         .wrap_err("error while creating a connection to the dbus registry")?;
+    let eproxy = EventObjectProxy::new(&rconnection)
+        .await
+        .wrap_err("unable to create proxy for atspi.Event.Object")?;
     let rproxy = RegistryProxy::new(&rconnection)
         .await
         .wrap_err("unable to create atspi registry proxy from connection")?;
@@ -83,23 +98,27 @@ pub async fn init_accessibility<'a>() -> Result<(RegistryProxy<'a>, BusProxy<'a>
         }
     };
 
-    Ok((rproxy, bproxy))
+    Ok((rproxy, bproxy, eproxy))
 }
 pub async fn register_events(rproxy: Arc<RegistryProxy<'_>>) -> Result<()> {
     rproxy
         .register_event("object:state-changed:focused")
         .await?;
     rproxy.register_event("object:text-caret-moved").await?;
+    rproxy.register_event("focus:").await?;
+    rproxy.register_event("document:load-complete").await?;
+    rproxy.register_event("object:text-changed:delete").await?;
     Ok(())
 }
 pub async fn spawn_event_tasks(
     rproxy: Arc<RegistryProxy<'static>>,
     bproxy: Arc<BusProxy<'static>>,
+    eproxy: Arc<EventObjectProxy<'static>>
 ) -> Result<()> {
     tokio::task::spawn(process_events(Arc::clone(&rproxy)))
         .await?
         .wrap_err("error while processing accessibility events")?;
-    tokio::task::spawn(process_signals(bproxy.clone()))
+    tokio::task::spawn(process_signals(eproxy.clone()))
         .await?
         .wrap_err("error while processing dbus sygnals")?;
     Ok(())
@@ -114,7 +133,7 @@ pub async fn process_events(rproxy: Arc<RegistryProxy<'_>>) -> Result<(), zbus::
     Ok(())
 }
 #[tracing::instrument(skip(proxy))]
-pub async fn process_signals(proxy: Arc<BusProxy<'_>>) -> Result<()> {
+pub async fn process_signals(proxy: Arc<EventObjectProxy<'_>>) -> Result<()> {
     let mut stream = proxy.receive_all_signals().await?;
     while let Some(_e) = stream.next().await {
         debug!("Event received!");
