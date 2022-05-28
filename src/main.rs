@@ -28,5 +28,6 @@ async fn process_events(state: &ScreenReaderState) {
             }
         };
         tracing::debug!(kind = %event.kind(), "Got event");
+    state.speech.lock().await.speak("got event");
     }
 }
