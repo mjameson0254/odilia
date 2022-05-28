@@ -1,9 +1,11 @@
 use eyre::WrapErr;
+use odilia_tts::Speaker;
+use tokio::sync::Mutex;
 use zbus::fdo::DBusProxy;
-
 pub struct ScreenReaderState {
     pub atspi: atspi::Connection,
     pub dbus: DBusProxy<'static>,
+    pub speech: Mutex<Speaker>,
 }
 
 impl ScreenReaderState {
@@ -14,7 +16,11 @@ impl ScreenReaderState {
         let dbus = DBusProxy::new(atspi.connection())
             .await
             .wrap_err("Failed to create org.freedesktop.DBus proxy")?;
-        Ok(Self { atspi, dbus })
+        let speech=Mutex::new(
+            Speaker::new("odilia")
+            .wrap_err("error initialising the tts subsystem")?
+        );
+            Ok(Self { atspi, dbus, speech})
     }
 
     #[allow(dead_code)]
