@@ -1,6 +1,7 @@
 mod args;
 mod logging;
 mod state;
+use eyre::Context;
 use state::ScreenReaderState;
 
 use futures::stream::StreamExt;
@@ -11,12 +12,12 @@ async fn main() -> eyre::Result<()> {
     let _args = args::parse();
     let state = ScreenReaderState::new().await?;
     state.register_event("Object:StateChanged:Focused").await?;
-    process_events(&state).await;
+    process_events(&state).await?;
     Ok(())
 }
 
 #[tracing::instrument(level = "debug", skip(state))]
-async fn process_events(state: &ScreenReaderState) {
+async fn process_events(state: &ScreenReaderState) ->eyre::Result<()>{
     let events = state.atspi.event_stream();
     pin_utils::pin_mut!(events);
     while let Some(res) = events.next().await {
@@ -28,6 +29,7 @@ async fn process_events(state: &ScreenReaderState) {
             }
         };
         tracing::debug!(kind = %event.kind(), "Got event");
-    state.speech.lock().await.speak("got event");
+    state.speech.lock().await.speak("got event").wrap_err("unable to speak with the initialised speech dispatcher client")?;
     }
+Ok(())
 }
