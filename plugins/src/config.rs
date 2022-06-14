@@ -11,10 +11,9 @@ pub struct Plugin {
 }
 
 impl Plugin {
-    pub fn into_command(mut self) -> Command {
-        let exe = self.command.remove(0);
-        let mut cmd = Command::new(exe);
-        cmd.args(self.command);
+    pub fn command(&self) -> Command {
+        let mut cmd = Command::new(&self.command[0]);
+        cmd.args(&self.command[1..]);
         cmd
     }
 }
