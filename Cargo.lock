@@ -621,6 +621,7 @@ dependencies = [
  "futures",
  "odilia-common",
  "odilia-input",
+ "odilia-plugins",
  "odilia-tts",
  "pin-utils",
  "tokio",
@@ -638,6 +639,10 @@ version = "0.0.1"
 
 [[package]]
 name = "odilia-input"
+version = "0.0.1"
+
+[[package]]
+name = "odilia-plugins"
 version = "0.0.1"
 
 [[package]]

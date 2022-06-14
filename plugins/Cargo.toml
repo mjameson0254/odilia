@@ -1,0 +1,15 @@
+[package]
+name = "odilia-plugins"
+version = "0.0.1"
+authors = ["Michael Connor Buchan <mikey@blindcomputing.org>", "Tait Hoyem <tait@tait.tech>", "Alberto Tirla <albertotirla@gmail.com>"]
+description = "Odilia's plugin architecture."
+license = "gpl-3" # Not gpl-3-or-later
+readme = "README.md"
+repository = "https://github.com/odilia-app/odilia"
+homepage = "https://odilia.app"
+keywords = ["screen-reader", "accessibility", "a11y", "plugin", "linux"]
+categories = ["accessibility"]
+edition = "2021"
+publish = false
+
+[dependencies]

@@ -55,6 +55,7 @@ eyre = "0.6.8"
 futures = { version = "0.3.21", default-features = false }
 odilia-common = { path = "common" }
 odilia-input = { path = "input" }
+odilia-plugins = { path = "plugins" }
 odilia-tts = { path = "tts" }
 pin-utils = "0.1.0"
 tokio = { version = "1.17.0", features = ["full", "parking_lot", "tracing"] }
