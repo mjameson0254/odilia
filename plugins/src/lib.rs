@@ -16,7 +16,8 @@ pub fn spawn(name: String, plugin: &Plugin) -> io::Result<()> {
     let mut cmd = plugin.command();
     // Safety: This is always a valid file descriptor
     cmd.stdin(unsafe { Stdio::from_raw_fd(b) })
-        .stdout(unsafe { Stdio::from_raw_fd(b) });
+        .stdout(unsafe { Stdio::from_raw_fd(b) })
+        .kill_on_drop(true);
 
     let child = cmd.spawn()?;
     tokio::spawn(wait_on_child(name, child));
